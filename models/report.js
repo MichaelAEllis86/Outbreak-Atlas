@@ -1,0 +1,247 @@
+const db = require("../db.js");
+const bcrypt = require("bcrypt");
+const { BCRYPT_WORK_FACTOR } = require("../config.js");
+const User = require("./user");
+const sqlForPartialUpdate =require("./user")
+const { NotFoundError, BadRequestError, UnauthorizedError, ForbiddenError,} = require("../expressError.js");
+
+
+/**
+ * Reports Class, represents a report in the db
+ * handles creation,update,deletion and retrival of report data.
+ */
+
+class Report {
+
+    static symptomCategoryMap = {
+        cough: "Respiratory",
+        congestion: "Respiratory",
+        sneezing: "Respiratory",
+        nausea: "Gastrointestinal",
+        vomiting: "Gastrointestinal",
+        diarrhea: "Gastrointestinal",
+        rash: "Dermal",
+        fever: "General",
+        fatigue: "General",
+        headache: "Neurological",
+        chills: "General",
+        bodyache: "General",
+  };
+
+    static async createNewReport(
+        {   user_id, 
+            primary_symptom, 
+            symptoms, 
+            severity, 
+            temperature, 
+            notes, 
+            zipcode,  
+            latitude, 
+            longitude}) 
+        {
+        const result=await db.query(`INSERT INTO
+            reports(
+            user_id,
+            primary_symptom,
+            symptoms,
+            severity,
+            temperature,
+            notes,
+            zipcode,
+            latitude,
+            longitude) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+            RETURNING * `, [user_id, primary_symptom, symptoms, severity, temperature, notes, zipcode, latitude, longitude])
+        
+        const report=result.rows[0]
+
+        return report
+    }
+
+    static async getAllReports(){
+        const result=await db.query(
+            `SELECT * FROM reports ORDER BY id `
+        )
+        return result.rows;
+    }
+
+    static async getReportByIdAllFields(id){
+      const result=await db.query (`SELECT * FROM reports WHERE id=$1`,[id])
+      const report=result.rows[0]
+
+      if(!report){
+        throw new NotFoundError (`report not found for id: ${id}`, 404)
+      }
+      return report
+    }
+
+    static async getReportByIdLimitedFields(id){
+        const result=await db.query(`SELECT 
+            id, 
+            created_at, 
+            primary_symptom, 
+            symptoms, 
+            severity, 
+            temperature, 
+            zipcode, 
+            state, 
+            latitude, 
+            longitude, 
+            has_location FROM reports WHERE id =$1`, [id])
+        
+        const report=result.rows[0]
+
+        if(!report){
+            throw new NotFoundError (`report not found for id: ${id}`, 404)
+        }
+        return report
+    }
+
+    static async getUserReports(user_id){
+        const userResult=await db.query(`SELECT id FROM users WHERE id=$1`,[user_id])
+        const user=userResult.rows[0]
+
+        if (!user){
+            throw new NotFoundError(`no user found for id: ${user_id}`, 404)
+        }
+        const reportResults=await db.query(`SELECT * FROM reports WHERE user_id=$1 ORDER BY created_at`,[user_id])
+        
+        return reportResults.rows;
+    }
+
+    static async getReportsbyZipcode(zipcode){
+        const result=await db.query(`SELECT * FROM reports WHERE zipcode = $1 ORDER BY created_at`, [zipcode])
+        return result.rows;
+    }
+
+    // requires timestamp formatting for filtering by start or end! If it doesnt look like a timestamp it doesn't work need to change.
+    static async filterReports({ order="created_at", direction="DESC", zipcode, state, start, end, severity, symptom, primary_symptom, min_temp, max_temp, has_location, limit=100, page=1 }) {
+
+        const orderConditionSQLStatements={
+            created_at: ` ORDER BY created_at`,
+            zipcode:  ` ORDER BY zipcode`,
+            state:  ` ORDER BY state, zipcode`,
+            severity:  ` ORDER BY CASE severity
+            WHEN 'mild' THEN 1
+            WHEN 'moderate' THEN 2
+            WHEN 'severe' THEN 3
+            END`,
+            temperature:` ORDER BY temperature`
+        }
+
+        // Cap limit to avoid massive responses! default to 100 but user can ask to 500 should they wish.
+        if (limit > 500) limit = 500;
+
+        let baseQuery = `FROM reports WHERE 1=1`;
+        const values = [];
+        let idx = 1;
+
+        if (zipcode) {
+            baseQuery += ` AND zipcode = $${idx++}`;
+            values.push(zipcode);
+         }
+        
+        if(state){
+            baseQuery += ` AND state = $${idx++}`;
+            values.push(state)
+        }
+         
+        if (start) {
+            baseQuery += ` AND created_at >= $${idx++}`;
+            values.push(start);
+        }
+
+        if (end) {
+            baseQuery += ` AND created_at <= $${idx++}`;
+            values.push(end);
+        }
+
+        if (severity) {
+            baseQuery += ` AND severity = $${idx++}`;
+            values.push(severity);
+        }
+        
+        if (symptom) {
+            baseQuery += ` AND symptoms @> ARRAY[$${idx++}]`;
+            values.push(symptom);
+        }
+
+        if (primary_symptom) {
+            baseQuery += ` AND primary_symptom = $${idx++}`;
+            values.push(primary_symptom);
+        }
+
+        if(min_temp){
+            baseQuery+= ` AND temperature >= $${idx++}`;
+            values.push(min_temp)
+        }
+
+        if (max_temp){
+            baseQuery+=` AND temperature <= $${idx++}`;
+            values.push(max_temp)
+        }
+
+        if (has_location !== undefined) {
+            baseQuery += has_location ? ` AND has_location = TRUE` : ` AND has_location = FALSE`;
+        }
+        // validate order keys! they should have a match to orderConditionSQLStatements obj
+        if (!orderConditionSQLStatements[order]) {
+            throw new BadRequestError(`Invalid order field: ${order}`);
+        }
+        // flex sorting direction. user specifies order in form and to list results to ascending or descending. If they don't specify then descending order.
+        const normalizedDirection =direction.toUpperCase() === "ASC" ? "ASC" : "DESC"; // default DESC
+        const offset = (page - 1) * limit;
+
+        // Count total (no limit/offset)
+        const totalQuery = `SELECT COUNT(*) ${baseQuery}`;
+        const totalResult = await db.query(totalQuery, values);
+        const totalCount = parseInt(totalResult.rows[0].count, 10);
+
+        // build the final query
+        const dataQuery = `SELECT * ${baseQuery} ${orderConditionSQLStatements[order]} ${normalizedDirection} LIMIT $${idx++} OFFSET $${idx++}`;
+        const dataResult = await db.query(dataQuery, [...values, limit, offset]);
+        return {
+            reports: dataResult.rows,
+            totalCount,
+            page,
+            totalPages: Math.ceil(totalCount / limit),
+        };
+    }
+
+    static async deleteReport(id){
+
+        const result=await db.query(`
+            DELETE FROM reports WHERE id=$1 RETURNING id, created_at`, [id])
+        
+        const report=result.rows[0]
+
+        if (!report){
+            throw new NotFoundError("report not found", 404)
+        }
+
+        return {deleted:report}
+
+    }
+
+    static async updateReport(id, data){
+
+        const {setCols, values}=sqlForPartialUpdate(data)
+        
+        const idVarIdx = `$${values.length + 1}`;
+
+        const querySQL =`UPDATE reports SET ${setCols} WHERE id = ${idVarIdx}
+        RETURNING *`
+
+        const result=await db.query(querySQL, [...values,id]);
+        const report=result.rows[0]
+
+        if (!report){
+            throw new NotFoundError("report not found", 404)
+        }
+        return report;
+    }
+
+
+
+}
+
+module.exports=Report
