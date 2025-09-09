@@ -6,6 +6,8 @@ const { authenticateJWT } = require("./middleware/auth");
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
 const reportRoutes =require("./routes/report")
+const fluRoutes = require("./routes/delphiflu");
+const covidRoutes = require("./routes/delphicovid");
 
 
 app.use(express.json());
@@ -14,6 +16,13 @@ app.use(authenticateJWT);
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/reports", reportRoutes)
+app.use("/flu", fluRoutes);
+app.use("/covid", covidRoutes);
+
+
+
+
+
 
 
 /** Handle 404 errors -- this matches everything */

@@ -44,6 +44,15 @@ CREATE TABLE reports(
     
 );
 
+CREATE TABLE user_locations (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  nickname TEXT,
+  zipcode VARCHAR(5) NOT NULL CHECK (zipcode ~ '^[0-9]{5}$'),
+  state CHAR(2) NOT NULL CHECK (state ~ '^[A-Z]{2}$')
+);
+
+
 \connect outbreak_atlas_test;
 
 CREATE TABLE users(
@@ -79,3 +88,12 @@ CREATE TABLE reports(
     ) STORED 
     
 );
+
+CREATE TABLE user_locations (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  nickname TEXT,
+  zipcode VARCHAR(5) NOT NULL CHECK (zipcode ~ '^[0-9]{5}$'),
+  state CHAR(2) NOT NULL CHECK (state ~ '^[A-Z]{2}$')
+);
+

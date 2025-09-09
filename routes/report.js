@@ -7,6 +7,7 @@ const Report = require("../models/report");
 const reportCreateSchema = require("../schemas/reportCreateSchema.json");
 const reportUpdateSchema=require("../schemas/reportUpdateSchema.json")
 const reportFilterSchema=require("../schemas/reportFilterSchema.json")
+const {sanitizeQueryParams}= require("../utils/querycoverter")
 const {ensureLoggedIn, ensureIsAdmin,  ensureIsAdminOrUser, ensureIsAdminOrUserId, ensureIsAdminOrReportOwner}= require("../middleware/auth");
 
 const router=express.Router();
@@ -21,29 +22,48 @@ router.get("/all", ensureLoggedIn, ensureIsAdmin, async function (req,res,next){
     }
 }  )
 
+router.get("/trending", async function (req,res,next){
+    try{
+        const { locationType, locationValue } = req.query;
+
+         // Validate locationType
+        if (!["nat", "state", "zipcode"].includes(locationType)) {
+            throw new BadRequestError("locationType must be one of: nat, state, zipcode");
+        }
+
+        // Validate locationValue if needed
+        if (locationType !== "nat" && !locationValue) {
+            throw new BadRequestError("locationValue is required for state or zipcode");
+        }
+       
+        const reports=await Report.getTrendingReports(locationType, locationValue);
+        return res.json({reports})
+    }
+    catch(err){
+        return next(err);
+    }   
+})
+
 router.get("/filter", async function (req,res,next){
     try{
         console.log("inside filter report route GET /filter", "this is req.query--->",req.query)
-        // ensure there is one query parameter. We don't want to return EVERY record to the user
-        if (Object.keys(req.query).length === 0){
+        // santize query parameters to correct types (numbers, booleans, etc)
+        const sanitizedQuery=sanitizeQueryParams(req.query,["min_temp", "max_temp", "limit", "page"],["has_location"]);
+        console.log("this is req.query after santization--->", sanitizedQuery)
+         // ensure there is one query parameter. We don't want to return EVERY record to the user
+        if (Object.keys(sanitizedQuery).length === 0){
             throw new BadRequestError("At least one filter parameter is required.");
         }
 
+       
         // validate query parameters
-        const validator=jsonschema.validate(req.query,reportFilterSchema);
-        if(!validator.valid){
-            // noLocationError params require one of state or zipcode. If not provided throw a custom badrequest error message.
-            const noLocationError = validator.errors.find(err =>
-                err.name === "anyOf") // error from the "anyOf" requirement not being fufilled
-            if (noLocationError){
-                throw new BadRequestError("You must provide either a zipcode or a state as a query parameter.");
-            } 
+        const validator = jsonschema.validate(sanitizedQuery, reportFilterSchema);
+        if (!validator.valid) {
+            const errs = validator.errors.map(e => e.stack);
+            console.log("these are the validation errors", errs);
+            throw new BadRequestError(errs);}
 
-            const errs=validator.errors.map(e => e.stack);
-            console.log("these are the validation errors", errs)
-            throw new BadRequestError(errs);
-        }
-        const reports = await Report.filterReports(req.query)
+        const reports = await Report.filterReports(sanitizedQuery)
 
         return res.json({reports})
 

@@ -8,10 +8,24 @@
       "enum": ["created_at", "zipcode", "state", "severity", "temperature"],
       "default": "created_at"
     },
-    "zipcode": { "type": "string", "pattern": "^[0-9]{5}$" },
-    "state": { "type": "string", "pattern": "^[A-Z]{2}$" },
-    "start": { "type": "string", "format": "date-time" },
-    "end": { "type": "string", "format": "date-time" },
+    "direction": {
+      "type": "string",
+      "enum": ["ASC", "DESC"],
+      "default": "DESC"
+    },
+    "range": {
+      "type": "string",
+      "enum": ["week", "month", "year"],
+      "description": "Preset time range to filter reports"
+    },
+    "locationType": {
+      "type": "string",
+      "enum": ["nat", "state", "zipcode"]
+    },
+    "locationValue": {
+      "type": "string",
+      "description": "Required if locationType is state or zipcode"
+    },
     "severity": {
       "type": "string",
       "enum": ["mild", "moderate", "severe"]
@@ -21,13 +35,26 @@
     "min_temp": { "type": "number" },
     "max_temp": { "type": "number" },
     "has_location": { "type": "boolean" },
-    "limit": { "type": "integer", "minimum": 1, "maximum": 500 },
-    "page": { "type": "integer", "minimum": 1 }
+    "limit": { "type": "integer", "minimum": 1, "maximum": 500, "default": 100 },
+    "page": { "type": "integer", "minimum": 1, "default": 1 }
   },
-  "anyOf": [
-    { "required": ["zipcode"] },
-    { "required": ["state"] }
+  "required": ["range", "locationType"],
+  "allOf": [
+    {
+      "if": {
+        "properties": { "locationType": { "const": "state" } }
+      },
+      "then": { "required": ["locationValue"] }
+    },
+    {
+      "if": {
+        "properties": { "locationType": { "const": "zipcode" } }
+      },
+      "then": { "required": ["locationValue"] }
+    }
   ],
   "additionalProperties": false
 }
+
+
 
