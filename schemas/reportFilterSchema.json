@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Report Filter Schema",
+  "type": "object",
+  "properties": {
+    "order": {
+      "type": "string",
+      "enum": ["created_at", "zipcode", "state", "severity", "temperature"],
+      "default": "created_at"
+    },
+    "direction": {
+      "type": "string",
+      "enum": ["ASC", "DESC"],
+      "default": "DESC"
+    },
+    "range": {
+      "type": "string",
+      "enum": ["week", "month", "year"],
+      "description": "Preset time range to filter reports"
+    },
+    "locationType": {
+      "type": "string",
+      "enum": ["nat", "state", "zipcode"]
+    },
+    "locationValue": {
+      "type": "string",
+      "description": "Required if locationType is state or zipcode"
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["mild", "moderate", "severe"]
+    },
+    "symptom": { "type": "string" },
+    "primary_symptom": { "type": "string" },
+    "min_temp": { "type": "number" },
+    "max_temp": { "type": "number" },
+    "has_location": { "type": "boolean" },
+    "limit": { "type": "integer", "minimum": 1, "maximum": 500, "default": 100 },
+    "page": { "type": "integer", "minimum": 1, "default": 1 }
+  },
+  "required": ["range", "locationType"],
+  "allOf": [
+    {
+      "if": {
+        "properties": { "locationType": { "const": "state" } }
+      },
+      "then": { "required": ["locationValue"] }
+    },
+    {
+      "if": {
+        "properties": { "locationType": { "const": "zipcode" } }
+      },
+      "then": { "required": ["locationValue"] }
+    }
+  ],
+  "additionalProperties": false
+}
+
+
+

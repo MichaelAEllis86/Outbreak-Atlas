@@ -1,0 +1,13 @@
+{
+  "type": "object",
+  "properties": {
+    "username": { "type": "string" },
+    "password": { "type": "string" },
+    "first_name": { "type": "string" },
+    "last_name": { "type": "string" },
+    "age": { "type": "number" },
+    "zipcode": { "type": "string" },
+    "state": { "type": "string" }
+  },
+  "additionalProperties": false
+}

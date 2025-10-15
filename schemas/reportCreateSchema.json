@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Create New Report",
+  "type": "object",
+  "properties": {
+    "user_id": { "type": "integer" },
+    "primary_symptom": { "type": "string", "minLength": 1 },
+    "symptoms": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["mild", "moderate", "severe"]
+    },
+    "temperature": {
+      "type": ["number", "null"],
+      "minimum": 90,
+      "maximum": 110
+    },
+    "notes": { "type": ["string", "null"] },
+    "zipcode": {
+      "type": "string",
+      "pattern": "^[0-9]{5}$"
+    },
+    "state": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$"
+    },
+    "latitude": {
+      "type": ["number", "null"],
+      "minimum": -90,
+      "maximum": 90
+    },
+    "longitude": {
+      "type": ["number", "null"],
+      "minimum": -180,
+      "maximum": 1809
+    }
+  },
+  "required": [
+    "user_id",
+    "primary_symptom",
+    "symptoms",
+    "severity",
+    "zipcode",
+    "state"
+  ],
+  "additionalProperties": false
+}
