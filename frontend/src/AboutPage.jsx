@@ -9,7 +9,7 @@ import Logo from "./assets/logo.png";
 
 function AboutPage() {
   return (
-    <Container maxWidth="lg" sx={{ mt: 6, mb: 6 }}>
+    <Container maxWidth="lg" sx={{ mb: 6 }}>
       {/* Header */}
       <Box
         display="flex"

@@ -19,7 +19,7 @@ function Dashboard() {
   const goToSignup = () => navigate("/signup");
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 6, mb: 6 }}>
+    <Container maxWidth="lg" sx={{ mb: 6 }}>
       {/* Logo Section */}
       <Box
         display="flex"

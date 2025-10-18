@@ -82,7 +82,7 @@ function AccountPage(){
       if (!userData) return <Typography>No user data available.</Typography>;
 
     return (
-        <Container maxWidth="lg" sx={{ mt: 6, mb: 6 }}>
+        <Container maxWidth="lg" sx={{ mb: 6 }}>
           {/* Logo Section */}
           <Box
             display="flex"

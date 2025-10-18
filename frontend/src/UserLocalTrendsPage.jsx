@@ -61,7 +61,7 @@ function UserLocalTrendsPage() {
     if (!userData) return <Typography>No user location available for local trends.</Typography>;
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 6, mb: 6 }}>
+    <Container maxWidth="lg" sx={{ mb: 6 }}>
       {/* Logo Section */}
       <Box
         display="flex"
@@ -80,7 +80,7 @@ function UserLocalTrendsPage() {
           Outbreak Atlas
         </Typography>
         <Typography variant="subtitle1" color="text.secondary">
-          Local Trends for {user.username}
+          Local illness Trends for {user.username}. 
         </Typography>
       </Box>
       {/* User-specific charts */}

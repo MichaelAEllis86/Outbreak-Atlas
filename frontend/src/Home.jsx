@@ -5,6 +5,7 @@ import {
   Box,
   Typography,
   Button,
+  Divider
 } from "@mui/material";
 import Logo from "./assets/logo.png";
 import { useAuth } from "./AuthContext";
@@ -16,25 +17,25 @@ function Home() {
   const {user, logout}=useAuth();
 
   const goToLogin = () => navigate("/login");
-  const goToSignup = () => navigate("/signup");
+  const goToSignup = () => navigate("/register");
   // implement dashboard nav once we make this component
   const goToDashboard = () => navigate(`/dashboard/:${user.id}`)
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 6, mb: 6 }}>
+    <Container maxWidth="lg" sx={{ mb: 6 }}>
       {/* Logo Section */}
       <Box
         display="flex"
         justifyContent="center"
         alignItems="center"
         flexDirection="column"
-        sx={{ mb: 6 }}
+        sx={{ mb: 3 }}
       >
         <Box
           component="img"
           src={Logo}
           alt="Outbreak Atlas Logo"
-          sx={{ width: { xs: 180, md: 400 }, height: "auto", mb: 2 }}
+          sx={{ width: { xs: 180, md: 400 }, height: "auto", mb: 2, backgroundColor: "#f8fafc", p: 2, borderRadius: 3  }}
         />
         <Typography variant="h3" fontWeight={700} color="primary">
           Outbreak Atlas
@@ -65,7 +66,7 @@ function Home() {
 
       {/* CDC Section (Flu) */}
       <FluTrends />
-
+<Divider sx={{ my: 4 }} />
       {/* OBA Section */}
       <OBATrends />
     </Container>

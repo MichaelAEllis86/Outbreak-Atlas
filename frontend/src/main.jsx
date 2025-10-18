@@ -22,7 +22,10 @@ const theme = createTheme({
   shape: { borderRadius: 12 },
   typography: {
     fontFamily: "'IBM Plex Sans', 'Source Sans Pro', sans-serif",
+    fontSize:13,
+     h3: { fontSize: '2rem' },
     h4: {
+      fontSize: '1.6rem',
       fontWeight: 700,
       letterSpacing: "0.5px",
       color: "#0056A4",

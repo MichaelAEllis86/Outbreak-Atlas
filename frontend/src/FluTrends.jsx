@@ -7,6 +7,7 @@ import FluBarChart from "./FluBarChart";
 import FluLineChart from "./FluLineChart";
 import axios from "axios";
 import { ReferenceLine } from "recharts";
+import CoronavirusIcon from "@mui/icons-material/Coronavirus";
 
 function FluTrends() {
   const [fluData, setFluData] = useState(null);
@@ -89,7 +90,9 @@ function FluTrends() {
   return (
     <Box sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom textAlign="center" sx={{ mb: 3 }}>
+        <CoronavirusIcon color="secondary" />
         National Bimonthly CDC Influenza-like Illness Surveillance (ILINet)
+        <CoronavirusIcon color="secondary" />
       </Typography>
 
       {/* Bar Charts Row */}
