@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import { FormHelperText } from "@mui/material";
 import { useAuth } from "./AuthContext";
 import * as Yup from "yup";
+import api from "./api";
 import axios from "axios";
 import {
   Button,
@@ -144,7 +145,7 @@ const CreateReportForm = ({ userId }) => {
         if (payload.latitude === null) delete payload.latitude;
         if (payload.longitude === null) delete payload.longitude;
 
-        await axios.post("/api/reports", payload, {
+        await api.post("/api/reports", payload, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -8,6 +8,7 @@ import {
   CircularProgress,
   Grid,  // ✅ import Grid directly from @mui/material
 } from "@mui/material";
+import api from "./api";
 import axios from "axios";
 
 function DashboardUserTrends(){
@@ -22,7 +23,7 @@ function DashboardUserTrends(){
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get(`/api/reports/user/${user.id}/aggregated`, {
+        const response = await api.get(`/api/reports/user/${user.id}/aggregated`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },

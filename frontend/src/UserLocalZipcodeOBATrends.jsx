@@ -6,6 +6,7 @@ import { useAuth } from "./AuthContext";
 import FluBarChart from "./FluBarChart";
 import FluLineChart from "./FluLineChart";
 import FluPieChart from "./FluPieChart";
+import api from "./api";
 import axios from "axios";
 
 function UserLocalZipcodeOBATrends({userData}){
@@ -21,7 +22,7 @@ function UserLocalZipcodeOBATrends({userData}){
             setLoading(true);
             setError(null);
             try{
-                const response= await axios.get(`/api/reports/trending?locationType=zipcode&locationValue=${userData.zipcode}`)
+                const response= await api.get(`/api/reports/trending?locationType=zipcode&locationValue=${userData.zipcode}`)
                 setOBAData(response.data.reports.aggregated)
                 setWeeklyData(response.data.reports.weeklyData)
                 console.log("fetched local OBA state data for local trends--->", response.data);

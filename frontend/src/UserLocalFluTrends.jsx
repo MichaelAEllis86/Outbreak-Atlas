@@ -6,6 +6,7 @@ import { useAuth } from "./AuthContext";
 import FluBarChart from "./FluBarChart";
 import FluLineChart from "./FluLineChart";
 import axios from "axios";
+import api from "./api";
 
 function UserLocalFluTrends({userData}) {
   const [fluData, setFluData] = useState(null);
@@ -20,7 +21,7 @@ function UserLocalFluTrends({userData}) {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get(`/api/flu/trends/${state}`);
+        const response = await api.get(`/api/flu/trends/${state}`);
         setFluData(response.data);
         console.log("fetched flu data--->", response.data);
         setWILIBaseline(response.data[0].baseline)

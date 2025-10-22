@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import api from "./api";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import {
@@ -136,7 +137,7 @@ const RegisterForm = () => {
     onSubmit: async (values, { setSubmitting, resetForm }) => {
         console.log("Login form submitted:", values);
       try {
-        const response = await axios.post("/api/auth/register", values, {
+        const response = await api.post("/api/auth/register", values, {
           headers: { "Content-Type": "application/json" },
         });
 
@@ -255,15 +256,19 @@ const RegisterForm = () => {
           helperText={formik.touched.zipcode && formik.errors.zipcode}
         />
 
-        <TextField
-          fullWidth
-          name="state"
-          label="State (2-letter code)"
-          value={formik.values.state}
-          onChange={formik.handleChange}
-          error={formik.touched.state && Boolean(formik.errors.state)}
-          helperText={formik.touched.state && formik.errors.state}
-        />
+         <FormControl fullWidth error={formik.touched.state && Boolean(formik.errors.state)}>
+                  <InputLabel>State</InputLabel>
+                  <Select name="state" value={formik.values.state} onChange={formik.handleChange}>
+                    {usStates.map((st) => (
+                      <MenuItem key={st.code} value={st.code}>
+                        {st.name} ({st.code})
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {formik.touched.state && formik.errors.state && (
+                    <FormHelperText>{formik.errors.state}</FormHelperText>
+                  )}
+                </FormControl>
 
         <Button type="submit" variant="contained" disabled={formik.isSubmitting}>
           {formik.isSubmitting ? "Registering..." : "Sign Up"}

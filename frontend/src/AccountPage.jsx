@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import Logo from "./assets/logo.png";
 import { useAuth } from "./AuthContext";
+import api from "./api";
 import axios from "axios";
 
 function AccountPage(){
@@ -30,7 +31,7 @@ function AccountPage(){
             if(!user) return;
             setLoading(true);
             setError(null);
-            const response=await axios.delete(`/api/users/${user.id}`,{
+            const response=await api.delete(`/api/users/${user.id}`,{
                 headers:{
                     Authorization:`Bearer ${localStorage.getItem("token")}`
                 },
@@ -52,7 +53,7 @@ function AccountPage(){
             setLoading(true);
             setError(null);
             try{
-                const response=await axios.get(`/api/users/${user.id}`,{
+                const response=await api.get(`/api/users/${user.id}`,{
                     headers:{
                         Authorization:`Bearer ${localStorage.getItem("token")}`
                     },

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "./AuthContext";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import api from "./api";
 import axios from "axios";
 import {
   Box,
@@ -114,7 +115,7 @@ function ExploreTrendsPage() {
         setWeeklyData(obaResponse.data.reports.weeklyData);
 
         if (values.locationType === "state") {
-          const fluResponse = await axios.get(`/api/flu/trends/${values.locationValue}`);
+          const fluResponse = await api.get(`/api/flu/trends/${values.locationValue}`);
           setFluData(fluResponse.data);
           console.log("here is fluResponse in explore trends---->", fluResponse.data)
           setWILIBaseline(fluResponse.data[0].baseline)

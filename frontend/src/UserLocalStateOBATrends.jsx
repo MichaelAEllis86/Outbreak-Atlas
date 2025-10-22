@@ -6,6 +6,7 @@ import { useAuth } from "./AuthContext";
 import FluBarChart from "./FluBarChart";
 import FluLineChart from "./FluLineChart";
 import FluPieChart from "./FluPieChart";
+import api from "./api";
 import axios from "axios";
 
 function UserLocalStateOBATrends({userData}){
@@ -21,7 +22,7 @@ function UserLocalStateOBATrends({userData}){
             setLoading(true);
             setError(null);
             try{
-                const response= await axios.get(`/api/reports/trending?locationType=state&locationValue=${userData.state}`)
+                const response= await api.get(`/api/reports/trending?locationType=state&locationValue=${userData.state}`)
                 setOBAData(response.data.reports.aggregated)
                 setWeeklyData(response.data.reports.weeklyData)
                 console.log("fetched local OBA state data for local trends--->", response.data);

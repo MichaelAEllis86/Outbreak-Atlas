@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import api from "./api";
 import axios from "axios";
 import {
   Box,
@@ -71,7 +72,7 @@ function DashboardUserReports() {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get(`/api/reports/user/${user.id}?page=${page}&limit=10`, {
+        const response = await api.get(`/api/reports/user/${user.id}?page=${page}&limit=10`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },

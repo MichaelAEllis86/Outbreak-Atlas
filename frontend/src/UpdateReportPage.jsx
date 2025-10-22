@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { CircularProgress, Alert, Container, Typography, Box } from "@mui/material"
 import axios from "axios";
+import api from "./api";
 import UpdateReportForm from "./UpdateReportForm";
 
 function UpdateReportPage() {                      
@@ -16,7 +17,7 @@ function UpdateReportPage() {
         setLoading(true);
         setError(null);
       try {
-            const response = await axios.get(`/api/reports/${reportId}`, 
+            const response = await api.get(`/api/reports/${reportId}`, 
                 {headers: {  Authorization: `Bearer ${localStorage.getItem("token")}`}//include token in request 
                 });
             setReportData(response.data.report);

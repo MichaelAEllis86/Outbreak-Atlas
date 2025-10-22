@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import api from "./api";
 import axios from "axios";
 import {
   Box,
@@ -44,7 +45,7 @@ function EditAccountForm({ userData }) {
     validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        await axios.patch(`/api/users/${userData.id}`, values, {
+        await api.patch(`/api/users/${userData.id}`, values, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setSnackbar({ open: true, message: "✅ Account updated!", severity: "success" });

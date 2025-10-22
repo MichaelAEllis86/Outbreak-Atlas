@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import api from "./api";
 import axios from "axios";
 import { useAuth } from "./AuthContext";
 import { useLocation } from "react-router-dom";
@@ -65,7 +66,7 @@ function LoginForm() {
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       console.log("Login form submitted:", values);
       try {
-        const response = await axios.post("/api/auth/login", values, {
+        const response = await api.post("/api/auth/login", values, {
           headers: { "Content-Type": "application/json" },
         });
 

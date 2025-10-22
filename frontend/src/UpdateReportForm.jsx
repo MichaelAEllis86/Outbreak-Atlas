@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { FormHelperText } from "@mui/material";
 import * as Yup from "yup";
+import api from "./api";
 import axios from "axios";
 import {
   Button,
@@ -139,7 +140,7 @@ const UpdateReportForm = ({ previousReport }) => {
         if (payload.latitude === null) delete payload.latitude;
         if (payload.longitude === null) delete payload.longitude;
 
-        await axios.patch(`/api/reports/${previousReport.id}`, payload, {
+        await api.patch(`/api/reports/${previousReport.id}`, payload, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,

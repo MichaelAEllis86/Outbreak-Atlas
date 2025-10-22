@@ -5,7 +5,7 @@ import { Box, Typography, CircularProgress } from "@mui/material";
 import Grid from "@mui/material/Grid"; // ✅ Grid v2
 import FluBarChart from "./FluBarChart";
 import FluLineChart from "./FluLineChart";
-import axios from "axios";
+import api from "./api";
 import { ReferenceLine } from "recharts";
 import CoronavirusIcon from "@mui/icons-material/Coronavirus";
 
@@ -20,7 +20,7 @@ function FluTrends() {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get(`/api/flu/trends/nat`);
+        const response = await api.get(`/api/flu/trends/nat`);
         setFluData(response.data);
         console.log("fetched flu data--->", response.data);
         setWILIBaseline(response.data[0].baseline)
