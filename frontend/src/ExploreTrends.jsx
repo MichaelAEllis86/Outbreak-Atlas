@@ -110,13 +110,13 @@ function ExploreTrendsPage() {
 
       try {
         const obaResponse = await api.get(
-          `/api/reports/trending?locationType=${values.locationType}&locationValue=${values.locationValue}`
+          `/reports/trending?locationType=${values.locationType}&locationValue=${values.locationValue}`
         );
         setOBAData(obaResponse.data.reports.aggregated);
         setWeeklyData(obaResponse.data.reports.weeklyData);
 
         if (values.locationType === "state") {
-          const fluResponse = await api.get(`/api/flu/trends/${values.locationValue}`);
+          const fluResponse = await api.get(`/flu/trends/${values.locationValue}`);
           setFluData(fluResponse.data);
           console.log("here is fluResponse in explore trends---->", fluResponse.data)
           setWILIBaseline(fluResponse.data[0].baseline)

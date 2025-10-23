@@ -66,7 +66,7 @@ function LoginForm() {
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       console.log("Login form submitted:", values);
       try {
-        const response = await api.post("/api/auth/login", values, {
+        const response = await api.post("/auth/login", values, {
           headers: { "Content-Type": "application/json" },
         });
 

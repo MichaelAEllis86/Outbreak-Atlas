@@ -22,7 +22,7 @@ function UserLocalStateOBATrends({userData}){
             setLoading(true);
             setError(null);
             try{
-                const response= await api.get(`/api/reports/trending?locationType=state&locationValue=${userData.state}`)
+                const response= await api.get(`/reports/trending?locationType=state&locationValue=${userData.state}`)
                 setOBAData(response.data.reports.aggregated)
                 setWeeklyData(response.data.reports.weeklyData)
                 console.log("fetched local OBA state data for local trends--->", response.data);

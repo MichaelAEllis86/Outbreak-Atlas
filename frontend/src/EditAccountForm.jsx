@@ -45,7 +45,7 @@ function EditAccountForm({ userData }) {
     validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        await api.patch(`/api/users/${userData.id}`, values, {
+        await api.patch(`/users/${userData.id}`, values, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setSnackbar({ open: true, message: "✅ Account updated!", severity: "success" });

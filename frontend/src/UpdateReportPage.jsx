@@ -17,7 +17,7 @@ function UpdateReportPage() {
         setLoading(true);
         setError(null);
       try {
-            const response = await api.get(`/api/reports/${reportId}`, 
+            const response = await api.get(`/reports/${reportId}`, 
                 {headers: {  Authorization: `Bearer ${localStorage.getItem("token")}`}//include token in request 
                 });
             setReportData(response.data.report);

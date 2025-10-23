@@ -9,8 +9,8 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:3000', // your Express backend
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''), 
-        // /api/users -> /users, /api/reports -> /reports
+        // rewrite: (path) => path.replace(/^\/api/, ''), 
+        // // /api/users -> /users, /api/reports -> /reports
       },
     },
   },

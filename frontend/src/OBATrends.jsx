@@ -25,7 +25,7 @@ function OBATrends() {
       setLoading(true);
       setError(null);
       try {
-        const response = await api.get(`/api/reports/trending?locationType=nat`);
+        const response = await api.get(`/reports/trending?locationType=nat`);
         setOBAData(response.data.reports.aggregated);
         setWeeklyData(response.data.reports.weeklyData);
         console.log("fetched OBA data--->", response.data);

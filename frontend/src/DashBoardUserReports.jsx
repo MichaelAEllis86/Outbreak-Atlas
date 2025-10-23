@@ -42,7 +42,7 @@ function DashboardUserReports() {
     if (!window.confirm("Are you sure you want to delete this report?")) return;
 
     try {
-      await axios.delete(`/api/reports/${reportId}`, {
+      await api.delete(`/reports/${reportId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -72,7 +72,7 @@ function DashboardUserReports() {
       setLoading(true);
       setError(null);
       try {
-        const response = await api.get(`/api/reports/user/${user.id}?page=${page}&limit=10`, {
+        const response = await api.get(`/reports/user/${user.id}?page=${page}&limit=10`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },

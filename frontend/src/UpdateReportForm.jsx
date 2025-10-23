@@ -140,7 +140,7 @@ const UpdateReportForm = ({ previousReport }) => {
         if (payload.latitude === null) delete payload.latitude;
         if (payload.longitude === null) delete payload.longitude;
 
-        await api.patch(`/api/reports/${previousReport.id}`, payload, {
+        await api.patch(`/reports/${previousReport.id}`, payload, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,

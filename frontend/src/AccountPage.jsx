@@ -31,7 +31,7 @@ function AccountPage(){
             if(!user) return;
             setLoading(true);
             setError(null);
-            const response=await api.delete(`/api/users/${user.id}`,{
+            const response=await api.delete(`/users/${user.id}`,{
                 headers:{
                     Authorization:`Bearer ${localStorage.getItem("token")}`
                 },
@@ -53,7 +53,7 @@ function AccountPage(){
             setLoading(true);
             setError(null);
             try{
-                const response=await api.get(`/api/users/${user.id}`,{
+                const response=await api.get(`/users/${user.id}`,{
                     headers:{
                         Authorization:`Bearer ${localStorage.getItem("token")}`
                     },

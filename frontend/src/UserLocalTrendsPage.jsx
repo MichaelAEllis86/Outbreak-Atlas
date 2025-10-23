@@ -32,7 +32,7 @@ function UserLocalTrendsPage() {
         setLoading(true);
         setError(null);
         try{
-            const response=await api.get(`/api/users/${user.id}`,{
+            const response=await api.get(`/users/${user.id}`,{
                 headers:{
                     Authorization:`Bearer ${localStorage.getItem("token")}`
                 },

@@ -145,7 +145,7 @@ const CreateReportForm = ({ userId }) => {
         if (payload.latitude === null) delete payload.latitude;
         if (payload.longitude === null) delete payload.longitude;
 
-        await api.post("/api/reports", payload, {
+        await api.post("/reports", payload, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,

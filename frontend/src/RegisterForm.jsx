@@ -137,7 +137,7 @@ const RegisterForm = () => {
     onSubmit: async (values, { setSubmitting, resetForm }) => {
         console.log("Login form submitted:", values);
       try {
-        const response = await api.post("/api/auth/register", values, {
+        const response = await api.post("/auth/register", values, {
           headers: { "Content-Type": "application/json" },
         });
 

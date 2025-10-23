@@ -21,7 +21,7 @@ function UserLocalFluTrends({userData}) {
       setLoading(true);
       setError(null);
       try {
-        const response = await api.get(`/api/flu/trends/${state}`);
+        const response = await api.get(`/flu/trends/${state}`);
         setFluData(response.data);
         console.log("fetched flu data--->", response.data);
         setWILIBaseline(response.data[0].baseline)
