@@ -1,3 +1,4 @@
+// frontend/src/ExploreTrends.jsx
 import { useState, useEffect } from "react";
 import { useAuth } from "./AuthContext";
 import { useFormik } from "formik";
@@ -108,7 +109,7 @@ function ExploreTrendsPage() {
       setHasSearched(true);
 
       try {
-        const obaResponse = await axios.get(
+        const obaResponse = await api.get(
           `/api/reports/trending?locationType=${values.locationType}&locationValue=${values.locationValue}`
         );
         setOBAData(obaResponse.data.reports.aggregated);

@@ -17,10 +17,7 @@ import { AuthProvider } from "./AuthContext";
 import { Box, Toolbar } from "@mui/material";
 import AccountPage from "./AccountPage";
 
-
 export default function App() {
-
-  console.log('🔍 API Base URL →', import.meta.env.VITE_API_BASE_URL);
 
   return (
     <BrowserRouter>
