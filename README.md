@@ -11,7 +11,7 @@
 ---
 
 ## 🌐 Deployed App
-🚀 **Live Site:** [Outbreak Atlas on Render](https://your-deployment-link-here.com)  
+🚀 **Live Site:** [Outbreak Atlas on Render](https://outbreak-atlas-cit0.onrender.com/)  
 📦 **GitHub Repository:** [github.com/MichaelAEllis86/Outbreak-Atlas](https://github.com/MichaelAEllis86/Outbreak-Atlas)
 
 ---
